@@ -2,11 +2,18 @@ package com.prj.one;
 
 import org.junit.jupiter.api.*;
 
+import java.time.Duration;
+
 import static org.junit.jupiter.api.Assertions.*;
 //@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
 //@DisplayNameGeneration(DisplayNameGenerator.Simple.class)
 //@DisplayNameGeneration(DisplayNameGenerator.IndicativeSentences.class)
 //@DisplayNameGeneration(DisplayNameGenerator.Standard.class)
+/*
+@TestMethodOrder(MethodOrderer.DisplayName.class)
+@TestMethodOrder(MethodOrderer.Random.class)
+*/
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class ProjectOneTest {
 
     ProjectOne projectOne;
@@ -36,6 +43,7 @@ class ProjectOneTest {
 
     @Test
     @DisplayName("Test if addition method works correctly")
+    @Order(1)
     void testAddMethodReturnsCorrectValue(){
         //setup
         assertEquals(6, projectOne.add(2, 4), "2 + 4 must be 6");
@@ -45,6 +53,7 @@ class ProjectOneTest {
 
     @Test
     @DisplayName("Test if an object is null or not null")
+    @Order(2)
     void testCheckNullMethod() {
         String str1 = null;
         String str2 = "Hello world!!";
@@ -55,6 +64,7 @@ class ProjectOneTest {
 
     @Test
     @DisplayName("Test isGreaterThan method")
+    @Order(3)
     void testIsGreaterThanMethod(){
         assertTrue(projectOne.isGreaterThan(12, 5), "12 > 5 must be true");
         assertFalse(projectOne.isGreaterThan(12, 22), "12 > 22 must be false");
@@ -65,5 +75,18 @@ class ProjectOneTest {
     void testArrayEquals(){
         String[] strings = {"My", "name", "is", "Hulk"};
         assertArrayEquals(strings, projectOne.getStrings(), "Arrays must be equal");
+    }
+
+    @Test
+    @DisplayName("Test if method throws exception")
+    void throwsException(){
+        assertThrows(Exception.class, () ->{projectOne.checkForPositive(-1);}, "Should throw exception");
+        assertDoesNotThrow(()->{projectOne.checkForPositive(9);}, "Should not throw exception");
+    }
+
+    @Test
+    @DisplayName("Test for timeout")
+    void testForTimeout(){
+        assertTimeoutPreemptively(Duration.ofSeconds(3), ()->{projectOne.checkTimeout();}, "Method should executed within 3 seconds");
     }
 }
