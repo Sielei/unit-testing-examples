@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +35,9 @@ class SpringbootProject1ApplicationTests {
 
 	@Autowired
 	private StudentGrades studentGrades;
+
+	@Autowired
+	ApplicationContext context;
 
 
 	@BeforeEach
@@ -72,6 +76,26 @@ class SpringbootProject1ApplicationTests {
 	@DisplayName("Test for null grades")
 	void checkForNullStudentGrades(){
 		assertNotNull(studentGrades.checkNull(collegeStudent.getStudentGrades().getMathGradeResults()));
+	}
+
+	@Test
+	@DisplayName("Test creating a student without grade")
+	void createStudentWithoutGrade(){
+		CollegeStudent student = context.getBean("collegeStudent", CollegeStudent.class);
+		student.setFirstname("Timacti");
+		student.setLastname("Jun");
+		student.setEmailAddress("tjun@see.com");
+		assertNotNull(student.getFirstname());
+		assertNotNull(student.getLastname());
+		assertNotNull(student.getEmailAddress());
+		assertNull(student.getStudentGrades());
+	}
+
+	@Test
+	@DisplayName("Verify that students are prototypes")
+	void verifyStudentsArePrototypes(){
+		CollegeStudent student = context.getBean("collegeStudent", CollegeStudent.class);
+		assertNotSame(collegeStudent, student);
 	}
 
 }
